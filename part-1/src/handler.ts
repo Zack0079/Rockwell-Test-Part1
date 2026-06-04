@@ -106,7 +106,9 @@ async function processRecord(record: SQSRecord): Promise<void> {
     const erpSalesOrderId = await createSalesOrder(erpOrder);
     console.log(`Created ERP sales order: ${erpSalesOrderId} for order ${order.orderId}`);
 
-    updateOrderPhase(order.orderId, "A1");
+    // bug fix1: add await here to ensure the phase update completes before the function exits
+    await updateOrderPhase(order.orderId, "A1");
+    return;
   } catch (err) {
     console.error(`Failed to create ERP sales order for ${order.orderId}:`, err);
     await updateOrderPhase(order.orderId, "A0", `ERP creation failed: ${(err as Error).message}`);
