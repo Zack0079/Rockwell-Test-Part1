@@ -12,6 +12,9 @@ export async function getSkuMappings(): Promise<SkuMapping[]> {
   let page = 1;
   let hasMore = true;
 
+  // Bug fix3: Fetch next page whem data.mappings.length is 50 or more;
+  // Found while fixing bug2 in handler.ts; check the getSkuMappings function to definde how the error handler in catch block works;
+  // It never fetch second page since it only get 50 items limit,so data.mappings.length is always 50 or less, never larger than 50 and get next page;
   while (hasMore) {
     const response = await fetch(`${ERP_BASE_URL}/item-mappings?page=${page}&per_page=50`, {
       headers: {
@@ -27,7 +30,7 @@ export async function getSkuMappings(): Promise<SkuMapping[]> {
     const data = (await response.json()) as { mappings: SkuMapping[] };
     allMappings.push(...data.mappings);
 
-    hasMore = data.mappings.length > 50;
+    hasMore = data.mappings.length >= 50;
 
     page++;
   }
