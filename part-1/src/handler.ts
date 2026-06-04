@@ -64,6 +64,12 @@ async function processRecord(record: SQSRecord): Promise<void> {
   try {
     skuMappings = await getSkuMappings();
   } catch (err) {
+    // Bug fix2: console log the error message and update order phase for easier debugging of ERP API issues
+    // found by AI; 
+    // According to other error handler, it used to update the order phase to show bug & error. So, I added the same error handling here
+    console.error("Failed to fetch SKU mappings from ERP:", err);
+    await updateOrderPhase(order.orderId, "A0", `ERP mapping fetch failed: ${(err as Error).message}`);
+    return;
   }
 
   // Step 5: Build and create sales order in ERP
@@ -107,6 +113,7 @@ async function processRecord(record: SQSRecord): Promise<void> {
     console.log(`Created ERP sales order: ${erpSalesOrderId} for order ${order.orderId}`);
 
     // bug fix1: add await here to ensure the phase update completes before the function exits
+    // found by AI
     await updateOrderPhase(order.orderId, "A1");
     return;
   } catch (err) {
