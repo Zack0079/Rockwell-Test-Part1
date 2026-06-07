@@ -66,7 +66,7 @@ async function processRecord(record: SQSRecord): Promise<void> {
   } catch (err) {
     // Bug fix2: console log the error message and update order phase for easier debugging of ERP API issues
     // found by AI; 
-    // According to other error handler, it used to update the order phase to show bug & error. So, I added the same error handling here
+    // According to other error handlers, they updates the order phase to show bug & error. So, I added the same error handling here
     console.error("Failed to fetch SKU mappings from ERP:", err);
     await updateOrderPhase(order.orderId, "A0", `ERP mapping fetch failed: ${(err as Error).message}`);
     return;
