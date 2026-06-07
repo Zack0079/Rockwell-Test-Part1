@@ -1,4 +1,8 @@
 # Rockwell Razors — Order Processor (Technical Test Part 1)
+BUG Fix
+1. src/handler.ts line 109; missing await
+2. src/handler.ts line 67; missing action in catch function
+3. src/services/erp-client.ts line 30; logic problem
 
 ## Overview
 
@@ -69,3 +73,4 @@ tests/
 ├── handler.test.ts     ← Test suite
 └── fixtures/           ← Sample order payloads
 ```
+
